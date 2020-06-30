@@ -1,3 +1,12 @@
+import { Conversation } from "../conversation/conversation.interface";
+import { User } from "../users/users.interface";
+
 interface Chat {
-	reciever: String;
+	message: String;
+	conversationId: Conversation;
+	sender: User;
+}
+
+export interface Messages {
+	messages: [Chat];
 }

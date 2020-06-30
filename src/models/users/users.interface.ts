@@ -1,14 +1,17 @@
-interface User {
+import { Post } from "../posts/post.interface";
+
+export interface User {
 	name: String;
 	username: String;
+	profile: String;
 	email: String;
 	readonly password: String;
 	createdAt: Date;
-	posts?: [String];
+	posts?: [Post];
 	comments?: [String];
 	friends?: [User];
 	notifications?: [];
-	role?: String;
+	admin: Boolean;
 	photos?: String;
 	about?: {
 		OfficeAddress?: String;
