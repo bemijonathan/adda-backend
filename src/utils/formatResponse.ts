@@ -1,15 +1,11 @@
 import { Response } from "express";
 
 export class FormatResponse {
-	constructor(
-		private res: Response,
-		private status: number,
-		private data: any
-	) {}
-	sendResponse() {
-		this.res.status(this.status).send({
+	constructor() {}
+	sendResponse(res: Response, status: number, data: any) {
+		res.status(status).send({
 			status: true,
-			data: this.data,
+			data: data,
 		});
 	}
 }

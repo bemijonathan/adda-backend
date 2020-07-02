@@ -1,12 +1,12 @@
 import { Post } from "../posts/post.interface";
+import { RootModel } from "../root.interface";
 
-export interface User {
+export interface User extends RootModel {
 	name: String;
 	username: String;
 	profile: String;
 	email: String;
 	readonly password: String;
-	createdAt: Date;
 	posts?: [Post];
 	comments?: [String];
 	friends?: [User];

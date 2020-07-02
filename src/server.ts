@@ -1,16 +1,10 @@
 import express, { Response, Request } from "express";
 import bodyParser from "body-parser";
+import ChatRoute from "./models/chat/chat.route";
 
 const app: express.Application = express();
 app.use(bodyParser.json());
 
-const home = (req: Request, res: Response) => {
-	console.log(req.body);
-	res.status(400).json({
-		done: "happy",
-	});
-};
-
-app.get("/", (req, res) => home(req, res));
+app.use("/api/chat", ChatRoute);
 
 export default app;

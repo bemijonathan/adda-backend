@@ -1,9 +1,9 @@
 import { Post } from "../posts/post.interface";
 import { User } from "../users/users.interface";
+import { RootModel } from "../root.interface";
 
-export interface comments {
+export interface comments extends RootModel {
 	content: String;
-	createdAt: Date;
 	post: Post;
 	user: User;
 }
