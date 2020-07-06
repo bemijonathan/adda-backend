@@ -1,18 +1,12 @@
 import { Request, Response } from "express";
-// import { Model } from "sequelize/types";
-
-// export interfac extends Request {
-// 	user: { id?: number };
-// }
 
 export const getOne = (model: any) => async (req: Request, res: Response) => {
 	try {
 		const doc = await model.findByPk(req.params.id);
 		return doc;
 	} catch (e) {
-		console.error(e);
-		throw new Error("not");
-		res.status(400).end();
+		console.log(e);
+		return new Error(e);
 	}
 };
 
