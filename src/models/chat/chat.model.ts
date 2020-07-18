@@ -1,10 +1,11 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelizeInstance as sequelize } from "../../db";
+import { IChat } from "./chat.interface";
 // const sequelize = new Sequelize("mysql://root:asd123@localhost:3306/mydb");
 
-class ChatModel extends Model {
+class ChatModel extends Model implements IChat {
 	id!: number;
-	pmessage!: string;
+	message!: string;
 	conversationId!: string;
 	sender!: string;
 	readonly createdAt!: Date;

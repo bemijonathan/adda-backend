@@ -1,36 +1,31 @@
 import { Request, Response } from "express";
+import { Model } from "sequelize";
 
-export const getOne = (model: any) => async (req: Request, res: Response) => {
+export const getOne = (model: any) => async (req: Request): Promise<Model> => {
 	try {
 		const doc = await model.findByPk(req.params.id);
 		return doc;
 	} catch (e) {
 		console.log(e);
-		return new Error(e);
+		throw new Error(e);
 	}
 };
 
-export const getMany = (model: any) => async (req: Request, res: Response) => {
+export const getMany = (model: any) => async () => {
 	try {
-		const docs = await model.find({});
-
-		res.status(200).json({ data: docs });
+		return await model.findAll();
 	} catch (e) {
-		console.error(e);
-		res.status(400).end();
+		console.log(e);
+		throw new Error(e);
 	}
 };
 
-export const createOne = (model: any) => async (
-	req: Request,
-	res: Response
-) => {
+export const createOne = (model: any) => async (req: Request) => {
 	try {
-		const doc = await model.create({ ...req.body });
-		res.status(201).json({ data: doc });
+		return await model.create({ ...req.body });
 	} catch (e) {
-		console.error(e);
-		res.status(400).end();
+		console.log(e);
+		throw new Error(e);
 	}
 };
 
@@ -86,4 +81,4 @@ export const crudControllers = (model: any) => ({
 	createOne: createOne(model),
 });
 
-let b: string | number = 10;
+// let b: string | number = 10;

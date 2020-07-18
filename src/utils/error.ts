@@ -3,7 +3,7 @@ import { Response } from "express";
 export class CustomError {
 	constructor() {}
 	notfound(res: Response) {
-		return res.status(404).send({
+		return res.send({
 			status: false,
 			error: "not found",
 		});

@@ -6,11 +6,11 @@ import { CustomError } from "../../utils/error";
 
 const response = new FormatResponse();
 const errorResponse = new CustomError();
-export class ChatService {
+export class ChatController {
 	async getMany(req: Request, res: Response) {
 		try {
-			const docs: any = await crudControllers(ChatModel).getOne(req, res);
-			response.sendResponse(res, docs, 200);
+			const docs: any = await crudControllers(ChatModel).getOne(req);
+			response.sendResponse(res, 200, docs);
 		} catch (error) {
 			console.log(error);
 			errorResponse.serverError(res);

@@ -7,19 +7,15 @@ export interface User extends RootModel {
 	profile: String;
 	email: String;
 	readonly password: String;
-	posts?: [Post];
-	comments?: [String];
-	friends?: [User];
-	notifications?: [];
+	posts: [String];
+	comments: [String];
+	friends: [String];
+	notifications: [String];
 	admin: Boolean;
-	photos?: String;
-	about?: {
-		OfficeAddress?: String;
-	};
-	socialMedia?: {
-		facebook?: String;
-		twitter?: String;
-		Google?: String;
-		pinterest?: String;
-	};
+	photos: String;
+	OfficeAddress: String;
+	facebook: String;
+	twitter: String;
+	Google: String;
+	pinterest: String;
 }
