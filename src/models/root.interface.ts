@@ -1,7 +1,7 @@
 import { Model } from "sequelize/types";
 
 export interface RootModel extends Model {
-	id: number;
+	id: string;
 	createdAt: Date;
 	updatedAt: Date;
 }

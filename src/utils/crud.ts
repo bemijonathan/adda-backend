@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { Model } from "sequelize";
 
-export const getOne = (model: any) => async (req: Request): Promise<Model> => {
+export const getOne = <T>(model: T) => async (req: Request): Promise<T> => {
 	try {
-		const doc = await model.findByPk(req.params.id);
+		const doc = await (model as any).findByPk(req.params.id);
 		return doc;
 	} catch (e) {
 		console.log(e);
@@ -11,30 +11,31 @@ export const getOne = (model: any) => async (req: Request): Promise<Model> => {
 	}
 };
 
-export const getMany = (model: any) => async () => {
+export const getMany = <T>(model: T) => async (req?: Request): Promise<T[]> => {
 	try {
-		return await model.findAll();
+		return await (model as any).findAll();
 	} catch (e) {
 		console.log(e);
 		throw new Error(e);
 	}
 };
 
-export const createOne = (model: any) => async (req: Request) => {
+export const createOne = <T>(model: T) => async (req: Request): Promise<T> => {
 	try {
-		return await model.create({ ...req.body });
+		let user = await (model as any).create({ ...req.body });
+		return user;
 	} catch (e) {
 		console.log(e);
 		throw new Error(e);
 	}
 };
 
-export const updateOne = (model: any) => async (
+export const updateOne = <T>(model: T) => async (
 	req: Request,
 	res: Response
-) => {
+): Promise<T | void> => {
 	try {
-		const updatedDoc = await model.findOneAndUpdate(
+		const updatedDoc = await (model as any).findOneAndUpdate(
 			{
 				id: req.params.id,
 			},
@@ -43,22 +44,22 @@ export const updateOne = (model: any) => async (
 		);
 
 		if (!updatedDoc) {
-			return res.status(400).end();
+			throw new Error("unable to update document");
+		} else {
+			return updatedDoc;
 		}
-
-		res.status(200).json({ data: updatedDoc });
 	} catch (e) {
-		console.error(e);
-		res.status(400).end();
+		throw new Error(e);
 	}
 };
 
-export const removeOne = (model: any) => async (
+//  to be edited
+export const removeOne = <T>(model: T) => async (
 	req: Request,
 	res: Response
 ) => {
 	try {
-		const removed = await model.findOneAndRemove({
+		const removed = await (model as any).findOneAndRemove({
 			id: req.params.id,
 		});
 

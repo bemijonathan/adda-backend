@@ -1,15 +1,16 @@
 import { DataTypes, Model, ModelCtor } from "sequelize";
 import { User } from "../users/users.interface";
-import { sequelizeInstance as sequelize } from "../../db";
+import { sequelizeInstance as sequelize, sequelizeInstance } from "../../db";
 import { hashedpassword } from "../../utils/auth";
+import { UUIDV4 } from "sequelize";
 
 class Users extends Model implements User {
-	id!: number;
+	id!: string;
 	name!: string;
 	username!: string;
 	profile!: string;
 	email!: string;
-	password!: string;
+	private _password!: string;
 	posts!: [string];
 	comments!: [string];
 	friends!: [string];
@@ -23,10 +24,22 @@ class Users extends Model implements User {
 	pinterest!: string;
 	readonly createdAt!: Date;
 	readonly updatedAt!: Date;
+	get password() {
+		return this._password;
+	}
+	set password(value: string) {
+		this._password = value;
+	}
 }
 
 Users.init(
 	{
+		id: {
+			type: DataTypes.UUID,
+			defaultValue: UUIDV4,
+			allowNull: false,
+			primaryKey: true,
+		},
 		name: {
 			type: DataTypes.STRING,
 			allowNull: false,

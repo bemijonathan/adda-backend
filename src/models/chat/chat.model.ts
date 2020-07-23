@@ -4,7 +4,7 @@ import { IChat } from "./chat.interface";
 // const sequelize = new Sequelize("mysql://root:asd123@localhost:3306/mydb");
 
 class ChatModel extends Model implements IChat {
-	id!: number;
+	id!: string;
 	message!: string;
 	conversationId!: string;
 	sender!: string;
@@ -15,9 +15,9 @@ class ChatModel extends Model implements IChat {
 ChatModel.init(
 	{
 		id: {
-			type: DataTypes.INTEGER,
+			type: DataTypes.UUID,
 			primaryKey: true,
-			autoIncrement: true,
+			allowNull: false,
 		},
 		message: {
 			type: DataTypes.STRING(128),
