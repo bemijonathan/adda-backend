@@ -1,17 +1,12 @@
-import { Sequelize } from "sequelize";
+import chalk from "chalk";
+import Mongoose from "mongoose";
 
-const config = {
-	username: "mixed_code",
-	password: "mixed_code",
-	database: "new",
-	host: "127.0.0.1",
-	port: 5432,
-	dialect: "postgres",
+export const connect = async (): Promise<void> => {
+	try {
+		await Mongoose.connect("mongodb://localhost:27017/adda", {
+			useNewUrlParser: true,
+		});
+	} catch (error) {
+		console.log(chalk.redBright.bold(error));
+	}
 };
-
-export const sequelizeInstance = new Sequelize(
-	config.database,
-	config.username,
-	config.password,
-	{ dialect: "postgres" }
-);

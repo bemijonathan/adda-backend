@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { Model } from "sequelize";
+import { Model } from "mongoose";
 
 export const getOne = <T>(model: T) => async (req: Request): Promise<T> => {
 	try {
-		const doc = await (model as any).findByPk(req.params.id);
+		const doc = await (model as any).find(req.params.id);
 		return doc;
 	} catch (e) {
 		console.log(e);
@@ -13,7 +13,7 @@ export const getOne = <T>(model: T) => async (req: Request): Promise<T> => {
 
 export const getMany = <T>(model: T) => async (req?: Request): Promise<T[]> => {
 	try {
-		return await (model as any).findAll();
+		return await (model as any).find();
 	} catch (e) {
 		console.log(e);
 		throw new Error(e);
