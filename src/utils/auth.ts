@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import chalk from "chalk";
 import jwt from "jsonwebtoken";
 
 export const hashedpassword = (password: string): string => {
@@ -20,10 +21,14 @@ export const validatepassword = (
 	return bcrypt.compareSync(myPlaintextPassword, hash);
 };
 
-export const generateToken = (id: string): string => {
-	return jwt.sign(id, "jona", {
-		expiresIn: "24h",
-	});
+export const generateToken = (id: string) => {
+	try {
+		return jwt.sign({ id }, "jona", {
+			expiresIn: "24h",
+		});
+	} catch (error) {
+		console.log(chalk.bgRedBright(error));
+	}
 };
 
 export const verifyToken = (token: string): boolean => {

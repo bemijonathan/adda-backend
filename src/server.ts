@@ -12,9 +12,10 @@ const apiversion: string = "/api";
 app.use(morgan("tiny"));
 app.use(bodyParser.json());
 
+app.post(apiversion + "/signup", signUp);
 app.use(`${apiversion}/chat`, ChatRoute);
 app.use(`${apiversion}/user`, UserRoute);
-app.use(apiversion + "/signup", signUp);
+
 // app.use(`${apiversion}/user`, )
 
 export default app;

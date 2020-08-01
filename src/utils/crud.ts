@@ -13,7 +13,8 @@ export const getOne = <T>(model: T) => async (req: Request): Promise<T> => {
 
 export const getMany = <T>(model: T) => async (req?: Request): Promise<T[]> => {
 	try {
-		return await (model as any).find();
+		const t = await (model as any).find();
+		return t;
 	} catch (e) {
 		console.log(e);
 		throw new Error(e);
@@ -31,8 +32,7 @@ export const createOne = <T>(model: T) => async (req: Request): Promise<T> => {
 };
 
 export const updateOne = <T>(model: T) => async (
-	req: Request,
-	res: Response
+	req: Request
 ): Promise<T | void> => {
 	try {
 		const updatedDoc = await (model as any).findOneAndUpdate(
@@ -54,23 +54,12 @@ export const updateOne = <T>(model: T) => async (
 };
 
 //  to be edited
-export const removeOne = <T>(model: T) => async (
-	req: Request,
-	res: Response
-) => {
+export const removeOne = <T>(model: T) => async (req: Request) => {
 	try {
-		const removed = await (model as any).findOneAndRemove({
-			id: req.params.id,
-		});
-
-		if (!removed) {
-			return res.status(400).end();
-		}
-
-		return res.status(200).json({ data: removed });
+		const removed = await (model as any).deleteOne(req.params.id);
+		return removed;
 	} catch (e) {
-		console.error(e);
-		res.status(400).end();
+		throw new Error(e);
 	}
 };
 

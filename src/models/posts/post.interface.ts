@@ -1,5 +1,6 @@
-import { User } from "../users/users.interface";
+//
 import { RootModel } from "../root.interface";
+import { User } from "../users/users.model";
 
 export interface Post extends RootModel {
 	title: String;

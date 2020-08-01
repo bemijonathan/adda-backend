@@ -1,6 +1,4 @@
-import { Model } from "sequelize/types";
-
-export interface RootModel extends Model {
+export interface RootModel {
 	id: string;
 	createdAt: Date;
 	updatedAt: Date;

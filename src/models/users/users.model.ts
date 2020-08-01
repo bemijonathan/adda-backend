@@ -1,122 +1,125 @@
-import { DataTypes, Model, ModelCtor } from "sequelize";
-import { User } from "../users/users.interface";
-import { sequelizeInstance as sequelize, sequelizeInstance } from "../../db";
-import { hashedpassword } from "../../utils/auth";
-import { UUIDV4 } from "sequelize";
+import { NextFunction } from "express";
+import mongoose, { Document } from "mongoose";
+import { hashedpassword, validatepassword } from "../../utils/auth";
 
-class Users extends Model implements User {
-	id!: string;
-	name!: string;
-	username!: string;
-	profile!: string;
-	email!: string;
-	private _password!: string;
-	posts!: [string];
-	comments!: [string];
-	friends!: [string];
-	notifications!: [string];
-	admin!: Boolean;
-	photos!: string;
-	OfficeAddress!: string;
-	facebook!: string;
-	twitter!: string;
-	Google!: string;
-	pinterest!: string;
-	readonly createdAt!: Date;
-	readonly updatedAt!: Date;
-	get password() {
-		return this._password;
-	}
-	set password(value: string) {
-		this._password = value;
-	}
+export interface User extends Document {
+	name: string;
+	username: string;
+	profile: string;
+	email: string;
+	password: string;
+	posts: [string];
+	comments: [string];
+	friends: [string];
+	notifications: [string];
+	admin: Boolean;
+	photos: string;
+	OfficeAddress: string;
+	facebook: string;
+	twitter: string;
+	Google: string;
+	pinterest: string;
+	readonly createdAt: Date;
+	readonly updatedAt: Date;
 }
 
-Users.init(
+const UsersSchema = new mongoose.Schema(
 	{
-		id: {
-			type: DataTypes.UUID,
-			defaultValue: UUIDV4,
-			allowNull: false,
-			primaryKey: true,
-		},
 		name: {
-			type: DataTypes.STRING,
-			allowNull: false,
+			type: String,
+			required: true,
+			trim: true,
 		},
 		username: {
-			type: DataTypes.STRING,
-			allowNull: false,
+			type: String,
+			required: true,
+			unique: true,
+			trim: true,
 		},
 		profile: {
-			type: DataTypes.STRING,
-			allowNull: true,
+			type: String,
 		},
 		email: {
-			type: DataTypes.STRING,
-			allowNull: true,
+			type: String,
+			unique: true,
+			required: true,
+			trim: true,
 		},
 		password: {
-			type: DataTypes.STRING,
-			allowNull: true,
+			type: String,
+			required: true,
+			trim: true,
 		},
 		posts: {
-			type: DataTypes.STRING,
-			allowNull: true,
+			type: [mongoose.SchemaTypes.ObjectId],
+			refs: "post",
 		},
 		comments: {
-			type: DataTypes.STRING,
-			allowNull: true,
+			type: [mongoose.SchemaTypes.ObjectId],
+			refs: "comment",
 		},
 		friends: {
-			type: DataTypes.STRING,
-			allowNull: true,
+			type: [mongoose.SchemaTypes.ObjectId],
+			refs: "user",
 		},
 		notifications: {
-			type: DataTypes.STRING,
-			allowNull: true,
+			type: [
+				{
+					link: String,
+					text: String,
+					time: {
+						type: Date,
+						default: Date.now(),
+					},
+				},
+			],
+			refs: "post",
 		},
 		admin: {
-			type: DataTypes.STRING,
-			allowNull: true,
+			type: Boolean,
+			default: false,
 		},
 		photos: {
-			type: DataTypes.STRING,
-			allowNull: true,
+			type: String,
 		},
 		OfficeAddress: {
-			type: DataTypes.STRING,
-			allowNull: true,
+			type: String,
 		},
 		facebook: {
-			type: DataTypes.STRING,
-			allowNull: true,
+			type: String,
 		},
 		twitter: {
-			type: DataTypes.STRING,
-			allowNull: true,
+			type: String,
 		},
 		Google: {
-			type: DataTypes.STRING,
-			allowNull: true,
+			type: String,
 		},
 		pinterest: {
-			type: DataTypes.STRING,
-			allowNull: true,
+			type: String,
 		},
 	},
 	{
-		hooks: {
-			beforeCreate(user: Users, options) {
-				user.password = hashedpassword(user.password);
-			},
-		},
-		sequelize,
-		modelName: "User",
 		timestamps: true,
 	}
 );
 
-Users.sync();
+UsersSchema.pre("save", function (next) {
+	const user: User = this as User;
+	if (!user.isModified("password")) {
+		return next();
+	}
+	let hash = hashedpassword(user.password);
+	user.password = hash;
+	next();
+});
 
-export default Users;
+UsersSchema.methods.checkPassword = (
+	password: string,
+	hash: string
+): boolean => {
+	return validatepassword(password, hash);
+};
+
+const usermodel = mongoose.model<User>("user", UsersSchema);
+
+export default usermodel;

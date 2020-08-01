@@ -1,41 +1,24 @@
-import { Model, DataTypes } from "sequelize";
-import { sequelizeInstance as sequelize } from "../../db";
+import mongoose from "mongoose";
 import { IChat } from "./chat.interface";
-// const sequelize = new Sequelize("mysql://root:asd123@localhost:3306/mydb");
 
-class ChatModel extends Model implements IChat {
-	id!: string;
-	message!: string;
-	conversationId!: string;
-	sender!: string;
-	readonly createdAt!: Date;
-	readonly updatedAt!: Date;
-}
-
-ChatModel.init(
+const ChatModel = new mongoose.Schema<IChat>(
 	{
-		id: {
-			type: DataTypes.UUID,
-			primaryKey: true,
-			allowNull: false,
-		},
 		message: {
-			type: DataTypes.STRING(128),
-			allowNull: false,
+			type: String,
+			trim: true,
 		},
 		conversationId: {
-			type: DataTypes.INTEGER,
-			allowNull: false,
+			type: String,
+			required: true,
 		},
 		sender: {
-			type: DataTypes.STRING(128),
-			allowNull: false,
+			type: String,
+			required: true,
 		},
 	},
 	{
-		tableName: "chatModel",
-		sequelize,
+		timestamps: true,
 	}
 );
 
-export default ChatModel;
+export default mongoose.model("chat", ChatModel);
