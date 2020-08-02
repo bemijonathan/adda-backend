@@ -1,16 +1,11 @@
 import bcrypt from "bcrypt";
 import chalk from "chalk";
 import jwt from "jsonwebtoken";
+import { logs } from "./logger";
 
 export const hashedpassword = (password: string): string => {
-	let hashed: string = "";
-	bcrypt.hash(password, 20, function (err, hash) {
-		if (err) {
-			throw new Error(err.message);
-		} else {
-			hashed = hash;
-		}
-	});
+	let hashed: string = bcrypt.hashSync(password, 10);
+	logs.warning(hashed);
 	return hashed;
 };
 

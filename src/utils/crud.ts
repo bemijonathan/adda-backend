@@ -1,22 +1,23 @@
 import { Request, Response } from "express";
 import { Model } from "mongoose";
+import { logs } from "./logger";
 
 export const getOne = <T>(model: T) => async (req: Request): Promise<T> => {
 	try {
-		const doc = await (model as any).find(req.params.id);
+		const doc: T = await (model as any).findOne({ _id: req.params.id });
 		return doc;
 	} catch (e) {
-		console.log(e);
+		logs.error(e);
 		throw new Error(e);
 	}
 };
 
 export const getMany = <T>(model: T) => async (req?: Request): Promise<T[]> => {
 	try {
-		const t = await (model as any).find();
+		const t = await (model as any).find().toJson();
 		return t;
 	} catch (e) {
-		console.log(e);
+		logs.error(e);
 		throw new Error(e);
 	}
 };
@@ -26,7 +27,7 @@ export const createOne = <T>(model: T) => async (req: Request): Promise<T> => {
 		let user = await (model as any).create({ ...req.body });
 		return user;
 	} catch (e) {
-		console.log(e);
+		logs.error(e);
 		throw new Error(e);
 	}
 };
@@ -35,19 +36,13 @@ export const updateOne = <T>(model: T) => async (
 	req: Request
 ): Promise<T | void> => {
 	try {
-		const updatedDoc = await (model as any).findOneAndUpdate(
+		return await (model as any).updateOne(
 			{
-				id: req.params.id,
+				_id: req.params.id,
 			},
 			req.body,
 			{ new: true }
 		);
-
-		if (!updatedDoc) {
-			throw new Error("unable to update document");
-		} else {
-			return updatedDoc;
-		}
 	} catch (e) {
 		throw new Error(e);
 	}
@@ -56,9 +51,10 @@ export const updateOne = <T>(model: T) => async (
 //  to be edited
 export const removeOne = <T>(model: T) => async (req: Request) => {
 	try {
-		const removed = await (model as any).deleteOne(req.params.id);
+		const removed = await (model as any).deleteOne({ _id: req.params.id });
 		return removed;
 	} catch (e) {
+		logs.error(e);
 		throw new Error(e);
 	}
 };

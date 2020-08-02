@@ -2,31 +2,31 @@ import { Response } from "express";
 
 export class CustomError {
 	constructor() {}
-	notfound(res: Response) {
-		return res.send({
+	notfound(res: Response, data?: any) {
+		return res.status(404).send({
 			status: false,
-			error: "not found",
+			error: data ? data : "not found",
 		});
 	}
-	serverError(res: Response) {
+	serverError(res: Response, data?: any) {
 		res.status(400).send({
 			status: false,
-			error: "internal server error",
+			error: data ? data : "internal server error",
 		});
 	}
-	unprocessedEntity(res: Response) {
+	unprocessedEntity(res: Response, data?: any) {
 		return res.status(422).send({
 			status: false,
-			error: "unprocessed entity",
+			error: data ? data : "unprocessed entity",
 		});
 	}
 	clientError(res: Response, data: any) {
 		return res.status(400).send({
 			status: false,
-			error: data,
+			error: data ? data : "Bad Request",
 		});
 	}
-	unauthenticated(res: Response) {
+	unauthenticated(res: Response, data?: any) {
 		return res.status(401).send({
 			status: false,
 			error: "user is unauthenticated",

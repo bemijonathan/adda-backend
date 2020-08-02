@@ -104,12 +104,11 @@ const UsersSchema = new mongoose.Schema(
 );
 
 UsersSchema.pre("save", function (next) {
-	const user: User = this as User;
-	if (!user.isModified("password")) {
+	if (!this.isModified("password")) {
 		return next();
 	}
-	let hash = hashedpassword(user.password);
-	user.password = hash;
+	let hash = hashedpassword((this as User).password);
+	(this as User).password = hash;
 	next();
 });
 
