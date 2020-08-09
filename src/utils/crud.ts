@@ -14,7 +14,7 @@ export const getOne = <T>(model: T) => async (req: Request): Promise<T> => {
 
 export const getMany = <T>(model: T) => async (req?: Request): Promise<T[]> => {
 	try {
-		const t = await (model as any).find().toJson();
+		const t = await (model as any).find({});
 		return t;
 	} catch (e) {
 		logs.error(e);
