@@ -24,7 +24,7 @@ export const getMany = <T>(model: T) => async (req?: Request): Promise<T[]> => {
 
 export const createOne = <T>(model: T) => async (req: Request): Promise<T> => {
 	try {
-		let user = await (model as any).create({ ...req.body });
+		const user = await (model as any).create({ ...req.body });
 		return user;
 	} catch (e) {
 		logs.error(e);

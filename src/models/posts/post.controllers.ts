@@ -42,17 +42,34 @@ class postController {
 
 	async getAll(req: Request, res: Response) {
 		try {
+			const t = await Post.find({}).populate("author");
+			f.sendResponse(res, 201, t);
+		} catch (e) {
+			logs.error(e);
+			e.unprocessedEntity(res);
+			// throw new Error(e);
+		}
+		try {
 			const data = await crudControllers(Post).getMany(req);
-			f.sendResponse(res, 201, data);
 		} catch (error) {
 			logs.error(error);
-			e.unprocessedEntity(res);
 		}
 	}
 
-	async createOne() {
+	async createOne(req: Request, res: Response) {
 		// alot has to happen here
 		// create the post and the picture if either fail delete both
+		logs.success(JSON.stringify(req.body));
+		try {
+			const post = await Post.create({
+				...req.body,
+				author: req.body.authenticatedUser,
+			});
+			f.sendResponse(res, 201, post);
+		} catch (error) {
+			logs.error(error);
+			e.clientError(res, "failed to create Post");
+		}
 	}
 }
 

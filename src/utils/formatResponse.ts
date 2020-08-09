@@ -2,15 +2,15 @@ import chalk from "chalk";
 import { Response } from "express";
 
 export class FormatResponse {
-	sendResponse(res: Response, status: number, data: any) {
-		res.status(status).send({
+	sendResponse<T>(res: Response, status: number, data: T): Response {
+		return res.status(status).send({
 			status: true,
 			data: this.serialize(data),
 		});
 	}
-	serialize(data: any) {
+	serialize<T>(data: T): T {
 		if (Array.isArray(data)) {
-			for (let d of data as any[]) {
+			for (const d of data as any[]) {
 				delete d.password;
 				delete d.email;
 				d.id = d._id;

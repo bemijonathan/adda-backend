@@ -30,6 +30,7 @@ const postSchema = new mongoose.Schema(
 		author: {
 			type: mongoose.SchemaTypes.ObjectId,
 			ref: "user",
+			required: true,
 		},
 	},
 	{
