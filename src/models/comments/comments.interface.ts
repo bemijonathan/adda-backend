@@ -1,7 +1,7 @@
-import { Post } from "../posts/post.interface";
+import { iPost } from "../posts/post.model";
 import { RootModel } from "../root.interface";
 
 export interface comments extends RootModel {
-	content: String;
-	post: Post;
+	content: string;
+	post: iPost;
 }

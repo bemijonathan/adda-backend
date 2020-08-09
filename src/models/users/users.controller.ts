@@ -7,20 +7,20 @@ import { Request, Response } from "express";
 import chalk from "chalk";
 import { logs } from "../../utils/logger";
 
-let response = new FormatResponse();
-let errorResponse = new CustomError();
+const response = new FormatResponse();
+const errorResponse = new CustomError();
 
 export class UserController {
-	async createUser(req: Request, res: Response) {
+	async createUser(req: Request, res: Response): Promise<void> {
 		try {
-			const user: User = await await Users.create(req.body);
+			const user: User = await Users.create(req.body);
 			const { email, username, id } = user;
 			response.sendResponse(res, 201, { email, username, id });
 		} catch (e) {
 			errorResponse.unprocessedEntity(e);
 		}
 	}
-	async deleteUser(req: Request, res: Response) {
+	async deleteUser(req: Request, res: Response): Promise<void> {
 		try {
 			const status = await crudControllers(Users).removeOne(req);
 			if (status) {
@@ -33,7 +33,7 @@ export class UserController {
 			errorResponse.serverError(res, error);
 		}
 	}
-	async getAll(req: Request, res: Response) {
+	async getAll(req: Request, res: Response): Promise<void> {
 		try {
 			const user: User[] = await Users.find().select(
 				" username email id  friends"
@@ -44,7 +44,7 @@ export class UserController {
 			errorResponse.clientError(res, e);
 		}
 	}
-	async removeOne(req: Request, res: Response) {
+	async removeOne(req: Request, res: Response): Promise<void> {
 		try {
 			const done = await crudControllers(Users).removeOne(req);
 			if (done.deletedCount) {
@@ -57,7 +57,7 @@ export class UserController {
 			errorResponse.unprocessedEntity(e);
 		}
 	}
-	async getOne(req: Request, res: Response) {
+	async getOne(req: Request, res: Response): Promise<void> {
 		try {
 			const user: User = await crudControllers(Users).getOne(req);
 			logs.warning(user);
@@ -71,7 +71,7 @@ export class UserController {
 			errorResponse.notfound(res);
 		}
 	}
-	async updateUser(req: Request, res: Response) {
+	async updateUser(req: Request, res: Response): Promise<void> {
 		try {
 			const user: User = await crudControllers(Users).updateOne(req);
 			if (user) {

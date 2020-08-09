@@ -1,4 +1,3 @@
-import { NextFunction } from "express";
 import mongoose, { Document } from "mongoose";
 import { hashedpassword, validatepassword } from "../../utils/auth";
 
@@ -12,7 +11,7 @@ export interface User extends Document {
 	comments: [string];
 	friends: [string];
 	notifications: [string];
-	admin: Boolean;
+	admin: boolean;
 	photos: string;
 	OfficeAddress: string;
 	facebook: string;
@@ -107,7 +106,7 @@ UsersSchema.pre("save", function (next) {
 	if (!this.isModified("password")) {
 		return next();
 	}
-	let hash = hashedpassword((this as User).password);
+	const hash = hashedpassword((this as User).password);
 	(this as User).password = hash;
 	next();
 });

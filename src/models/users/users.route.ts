@@ -1,5 +1,4 @@
 import { IRouter, Router } from "express";
-import { crudControllers } from "../../utils/crud";
 import { UserController } from "./users.controller";
 
 const UserRoute: IRouter = Router();
