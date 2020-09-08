@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import { Model } from "mongoose";
-import { logs } from "./logger";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Request } from "express";
+import { logger as logs } from "./logger";
 
 export const getOne = <T>(model: T) => async (req: Request): Promise<T> => {
 	try {
@@ -12,7 +12,7 @@ export const getOne = <T>(model: T) => async (req: Request): Promise<T> => {
 	}
 };
 
-export const getMany = <T>(model: T) => async (req?: Request): Promise<T[]> => {
+export const getMany = <T>(model: T) => async (): Promise<T[]> => {
 	try {
 		const t = await (model as any).find({});
 		return t;
@@ -49,7 +49,7 @@ export const updateOne = <T>(model: T) => async (
 };
 
 //  to be edited
-export const removeOne = <T>(model: T) => async (req: Request) => {
+export const removeOne = <T>(model: T) => async (req: Request): Promise<T> => {
 	try {
 		const removed = await (model as any).deleteOne({ _id: req.params.id });
 		return removed;
@@ -59,7 +59,7 @@ export const removeOne = <T>(model: T) => async (req: Request) => {
 	}
 };
 
-export const crudControllers = (model: any) => ({
+export const crudControllers = <T>(model: T): any => ({
 	removeOne: removeOne(model),
 	updateOne: updateOne(model),
 	getMany: getMany(model),

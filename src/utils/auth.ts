@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import chalk from "chalk";
 import jwt from "jsonwebtoken";
-import { logs } from "./logger";
+import { logger as logs } from "./logger";
 import { NextFunction, Request, Response } from "express";
 import usersModel, { User } from "../models/users/users.model";
 import { CustomError } from "./error";

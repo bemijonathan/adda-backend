@@ -5,7 +5,7 @@ import { User } from "./users.model";
 import Users from "./users.model";
 import { Request, Response } from "express";
 import chalk from "chalk";
-import { logs } from "../../utils/logger";
+import { logger as logs } from "../../utils/logger";
 
 const response = new FormatResponse();
 const errorResponse = new CustomError();

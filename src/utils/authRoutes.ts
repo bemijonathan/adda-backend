@@ -4,15 +4,17 @@ import Users, { User } from "../models/users/users.model";
 import { generateToken, validatepassword } from "./auth";
 import { FormatResponse } from "./formatResponse";
 import { CustomError } from "./error";
-import { logs } from "./logger";
+import { logger as logs } from "./logger";
+import { signupValidator } from "./validator";
 
-let f = new FormatResponse();
-let e = new CustomError();
+const f = new FormatResponse();
+const e = new CustomError();
 
-export const signUp = async (req: Request, res: Response) => {
+export const signUp = async (req: Request, res: Response): Promise<void> => {
 	try {
-		let user: User = await Users.create(req.body);
-		let token = generateToken(user.id);
+		signupValidator.validate(req.body, { abortEarly: false });
+		const user: User = await Users.create(req.body);
+		const token = generateToken(user.id);
 		console.log(user.password);
 		f.sendResponse(res, 201, { user, token });
 	} catch (error) {
@@ -24,25 +26,25 @@ export const signUp = async (req: Request, res: Response) => {
 	}
 };
 
-export const signIn = async (req: Request, res: Response) => {
+export const signIn = async (req: Request, res: Response): Promise<void> => {
 	const { email, password } = req.body;
 	if (!email || !password) {
-		return e.clientError(res, "missing fields");
-	}
-	try {
-		let user: User | null = await Users.findOne({ email: req.body.email });
-		if (user) {
-			if (validatepassword(password, user.password)) {
-				let token = generateToken(user.id);
-				f.sendResponse(res, 201, token);
+		e.clientError(res, "missing fields");
+	} else
+		try {
+			const user: User | null = await Users.findOne({ email: req.body.email });
+			if (user) {
+				if (validatepassword(password, user.password)) {
+					const token = generateToken(user.id);
+					f.sendResponse(res, 201, token);
+				} else {
+					e.clientError(res, "incorrect username or password");
+				}
 			} else {
-				e.clientError(res, "incorrect username or password");
+				e.notfound(res, "no  user associated with that account");
 			}
-		} else {
-			e.notfound(res, "no  user associated with that account");
+		} catch (error) {
+			logs.error(error);
+			e.clientError(res, "");
 		}
-	} catch (error) {
-		logs.error(error);
-		e.clientError(res, "");
-	}
 };
