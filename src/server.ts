@@ -12,10 +12,12 @@ const apiversion: string = "/api";
 app.use(morgan("tiny"));
 app.use(bodyParser.json());
 
-app.post(apiversion + "/signup", signUp);
-app.post(apiversion + "/signin", signIn);
-app.use(`${apiversion}/chat`, ChatRoute);
-app.use(`${apiversion}/user`, UserRoute);
+const versionApi = (version:string, route:string) =>  version + route
+
+app.post(versionApi("/signup"), signUp);
+app.post(versionApi("/signin"), signIn);
+app.use(versionApi("/chat"), ChatRoute);
+app.use(versionApi("/user"), UserRoute);
 
 // app.use(`${apiversion}/user`, )
 
